@@ -40,9 +40,11 @@ public class UserController {
         } catch (InvalidTokenException ex) {
             return ResponseEntity.status(403).body(Map.of("error", "unauthorized"));
         }
+
         if (claims.getRole() != "MANAGER") {
             return ResponseEntity.status(403).body(Map.of("message", "unauthorized: Managers only"));
         }
+
         // check if user is manaager
         try {
             return service.getAllUsers()

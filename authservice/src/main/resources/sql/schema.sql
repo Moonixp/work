@@ -14,7 +14,7 @@
 -- );
 
 create table if not exists auth (
-    user_id UUID primary key not null,
+    user_id UUID primary key not null, -- references the users_id
     email TEXT unique not null,
     password_hash VARCHAR(255) not null,
  	role VARCHAR CHECK (role IN ('MANAGER', 'USER')),
