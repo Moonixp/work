@@ -1,0 +1,29 @@
+services:
+  user-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: userdb 
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: userpass
+    ports:
+      - 5333:5432
+    volumes:
+      - user-db-data:/var/lib/postgresql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8080
+    depends_on:
+      - user-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/userdb
+      SPRING_DATASOURCE_USERNAME: user 
+      SPRING_DATASOURCE_PASSWORD: userpass 
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    restart: always
+
+volumes:
+  user-db-data:

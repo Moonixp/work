@@ -1,0 +1,30 @@
+services:
+  auth-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+    ports:
+      - 5111:5432
+    volumes:
+      - auth-db-data:/var/lib/postgresql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - auth-db
+    environment:
+      SPRING_USERSERVICE_API: http://localhost:8081
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/authdb
+      SPRING_DATASOURCE_USERNAME: authuser
+      SPRING_DATASOURCE_PASSWORD: authpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    restart: always
+
+volumes:
+  auth-db-data:
